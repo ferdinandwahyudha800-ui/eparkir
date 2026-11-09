@@ -1,0 +1,158 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    DIAGRAM KELAS - BAGIAN 1                                  ║
+║                    Hierarki Kendaraan & Exception                            ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         HIERARKI KENDARAAN                                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+                         ┌──────────────────────────┐
+                         │   <<abstract>>           │
+                         │     Kendaraan            │
+                         ├──────────────────────────┤
+                         │ # platNomor: string      │
+                         │ # pemilik: string        │
+                         ├──────────────────────────┤
+                         │ + Kendaraan(...)         │
+                         │ + getPlatNomor(): string │
+                         │ + getPemilik(): string   │
+                         │ + hitungTarif(): int = 0 │  ← Virtual murni
+                         │ + ukuranSlotMinimum() = 0│  ← Virtual murni
+                         │ + jenisKendaraan() = 0   │  ← Virtual murni
+                         └────────────┬─────────────┘
+                                      │
+                    ┌─────────────────┼─────────────────┐
+                    │                 │                 │
+                    ▼                 ▼                 ▼
+         ┌──────────────────┐ ┌──────────────┐ ┌──────────────────┐
+         │      Motor       │ │    Mobil     │ │      Truk        │
+         ├──────────────────┤ ├──────────────┤ ├──────────────────┤
+         │ - TARIF_JAM_1    │ │ - TARIF_JAM_1│ │ - TARIF_JAM_1    │
+         │   = 2000         │ │   = 5000     │ │   = 10000        │
+         │ - TARIF_JAM_N    │ │ - TARIF_JAM_N│ │ - TARIF_JAM_N    │
+         │   = 1000         │ │   = 3000     │ │   = 6000         │
+         ├──────────────────┤ ├──────────────┤ ├──────────────────┤
+         │ + Motor(...)     │ │ + Mobil(...) │ │ + Truk(...)      │
+         │ + hitungTarif()  │ │ + hitungTarif│ │ + hitungTarif()  │
+         │ + ukuranSlot()   │ │ + ukuranSlot │ │ + ukuranSlot()   │
+         │   → KECIL        │ │   → SEDANG   │ │   → BESAR        │
+         │ + jenisKendaraan │ │ + jenis...   │ │ + jenisKendaraan │
+         │   → "Motor"      │ │   → "Mobil"  │ │   → "Truk"       │
+         └──────────────────┘ └──────────────┘ └──────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                            ENUM                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+                         ┌──────────────────────┐
+                         │   <<enumeration>>    │
+                         │     UkuranSlot       │
+                         ├──────────────────────┤
+                         │ KECIL                │
+                         │ SEDANG               │
+                         │ BESAR                │
+                         └──────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         HIERARKI EXCEPTION                                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+                      ┌─────────────────────────┐
+                      │   std::exception        │  ← Standard library
+                      └───────────┬─────────────┘
+                                  │
+                  ┌───────────────┼───────────────┐
+                  │               │               │
+                  ▼               ▼               ▼
+      ┌─────────────────┐ ┌──────────────┐ ┌─────────────────────┐
+      │ ParkirPenuhError│ │TiketTidak... │ │KendaraanSudah...    │
+      ├─────────────────┤ ├──────────────┤ ├─────────────────────┤
+      │ - pesan: string │ │- pesan: str  │ │- pesan: string      │
+      ├─────────────────┤ ├──────────────┤ ├─────────────────────┤
+      │ + ParkirPenuh() │ │+ TiketTidak()│ │+ KendaraanSudah()   │
+      │ + what()        │ │+ what()      │ │+ what()             │
+      └─────────────────┘ └──────────────┘ └─────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                       CONTOH PENGGUNAAN                                      │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+  // Polimorfisme - pointer kelas dasar ke objek turunan
+  unique_ptr<Kendaraan> kendaraan = make_unique<Motor>("B 1234 XYZ", "Ahmad");
+                 ▲                            ▲
+                 │                            │
+           Kelas dasar                  Kelas turunan
+           (abstrak)                    (konkret)
+
+  // Method virtual dipanggil sesuai tipe objek sebenarnya
+  int tarif = kendaraan->hitungTarif(3);  // Memanggil Motor::hitungTarif()
+                                           // Bukan Kendaraan::hitungTarif()
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    KONSEP OOP YANG DITERAPKAN                                │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+  1. ABSTRAKSI
+     └─ Kelas Kendaraan abstrak dengan method virtual murni (= 0)
+     └─ Menyembunyikan detail implementasi
+
+  2. PEWARISAN (INHERITANCE)
+     └─ Motor, Mobil, Truk mewarisi dari Kendaraan
+     └─ Mewarisi atribut dan method
+
+  3. POLIMORFISME
+     └─ Method hitungTarif() di-override di setiap kelas turunan
+     └─ Runtime polymorphism dengan virtual functions
+     └─ Satu interface, banyak implementasi
+
+  4. ENKAPSULASI
+     └─ Atribut protected (platNomor, pemilik)
+     └─ Tarif disimpan private
+     └─ Akses via method getter publik
+
+  5. EXCEPTION HANDLING
+     └─ Custom exception classes
+     └─ Inherit dari std::exception
+     └─ Method what() untuk pesan error
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         RELASI ANTAR KELAS                                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+  Kendaraan ◄────┐  (Generalization/Inheritance)
+            Motor │  "Motor adalah Kendaraan"
+            Mobil │  "is-a relationship"
+            Truk  │
+                  └──────────────────────────────────────
+
+  std::exception ◄───┐  (Generalization)
+                     │  ParkirPenuhError
+                     │  TiketTidakDitemukanError
+                     └  KendaraanSudahParkirError
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                      PERHITUNGAN TARIF                                       │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+  Formula: Tarif = Tarif_Jam_1 + (Durasi - 1) × Tarif_Jam_Berikutnya
+
+  Contoh Motor parkir 3 jam:
+    = Rp 2.000 + (3 - 1) × Rp 1.000
+    = Rp 2.000 + Rp 2.000
+    = Rp 4.000
+
+  Contoh Mobil parkir 4 jam:
+    = Rp 5.000 + (4 - 1) × Rp 3.000
+    = Rp 5.000 + Rp 9.000
+    = Rp 14.000
+
+  Contoh Truk parkir 5 jam:
+    = Rp 10.000 + (5 - 1) × Rp 6.000
+    = Rp 10.000 + Rp 24.000
+    = Rp 34.000
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║  CATATAN: Durasi dibulatkan ke atas per jam. Minimum 1 jam.                 ║
+║  Contoh: 45 menit = 1 jam, 3 jam 10 menit = 4 jam                           ║
+╚══════════════════════════════════════════════════════════════════════════════╝
