@@ -1,41 +1,35 @@
-# Makefile untuk Bagian 1 - Kelas Kendaraan
-
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra -pedantic
+CXXFLAGS = -std=c++17 -Wall -Wextra -pedantic -Iinclude
 
-# Object files
-OBJS = Kendaraan.o Motor.o Mobil.o Truk.o Exception.o
+SRC = src/Kendaraan.cpp src/Motor.cpp src/Mobil.cpp src/Truk.cpp \
+      src/Exception.cpp src/SlotParkir.cpp src/Tiket.cpp src/Struk.cpp \
+      src/TanpaDiskon.cpp src/DiskonMember.cpp src/HitungDurasi.cpp \
+      src/GedungParkir.cpp
 
-# Target utama
-all: test_bagian1
+.PHONY: all clean run test_bagian1 test_bagian2 test_bagian3
 
-# Compile test program
-test_bagian1: $(OBJS) test_bagian1.o
-	$(CXX) $(CXXFLAGS) -o test_bagian1 $(OBJS) test_bagian1.o
+all: parkir_pintar
 
-# Compile object files
-Kendaraan.o: Kendaraan.cpp Kendaraan.h
-	$(CXX) $(CXXFLAGS) -c Kendaraan.cpp
+parkir_pintar: $(SRC) main.cpp
+	$(CXX) $(CXXFLAGS) $(SRC) main.cpp -o parkir_pintar
 
-Motor.o: Motor.cpp Motor.h Kendaraan.h
-	$(CXX) $(CXXFLAGS) -c Motor.cpp
+run: parkir_pintar
+	./parkir_pintar
 
-Mobil.o: Mobil.cpp Mobil.h Kendaraan.h
-	$(CXX) $(CXXFLAGS) -c Mobil.cpp
-
-Truk.o: Truk.cpp Truk.h Kendaraan.h
-	$(CXX) $(CXXFLAGS) -c Truk.cpp
-
-Exception.o: Exception.cpp Exception.h
-	$(CXX) $(CXXFLAGS) -c Exception.cpp
-
-test_bagian1.o: test_bagian1.cpp Motor.h Mobil.h Truk.h Exception.h
-	$(CXX) $(CXXFLAGS) -c test_bagian1.cpp
-
-# Clean
-clean:
-	rm -f *.o test_bagian1 test_bagian1.exe
-
-# Run test
-test: test_bagian1
+test_bagian1:
+	$(CXX) $(CXXFLAGS) src/Kendaraan.cpp src/Motor.cpp src/Mobil.cpp src/Truk.cpp \
+		src/Exception.cpp test_bagian1.cpp -o test_bagian1
 	./test_bagian1
+
+test_bagian2:
+	$(CXX) $(CXXFLAGS) src/Kendaraan.cpp src/Motor.cpp src/Mobil.cpp src/Truk.cpp \
+		src/SlotParkir.cpp src/Tiket.cpp src/Struk.cpp test_bagian2.cpp -o test_bagian2
+	./test_bagian2
+
+test_bagian3:
+	$(CXX) $(CXXFLAGS) src/Kendaraan.cpp src/Motor.cpp src/Mobil.cpp src/Truk.cpp \
+		src/TanpaDiskon.cpp src/DiskonMember.cpp src/HitungDurasi.cpp test_bagian3.cpp -o test_bagian3
+	./test_bagian3
+
+clean:
+	rm -f parkir_pintar parkir_pintar.exe test_bagian1 test_bagian1.exe test_bagian2 test_bagian2.exe test_bagian3 test_bagian3.exe
