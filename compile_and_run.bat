@@ -1,9 +1,8 @@
 @echo off
-REM Script untuk compile dan run test bagian 1
-REM Untuk Windows
+REM Script compile dan jalankan demo lengkap - Bagian 4
 
 echo ================================================
-echo   COMPILE BAGIAN 1 - SIMULASI PARKIR PINTAR
+echo   COMPILE DEMO LENGKAP - SIMULASI PARKIR PINTAR
 echo ================================================
 echo.
 
@@ -26,7 +25,7 @@ echo [INFO] Memulai kompilasi...
 echo.
 
 REM Compile
-g++ -std=c++17 -Wall -Wextra -Iinclude src\Kendaraan.cpp src\Motor.cpp src\Mobil.cpp src\Truk.cpp test_bagian1.cpp -o test_bagian1.exe
+g++ -std=c++17 -Wall -Wextra -pedantic -Iinclude src\Kendaraan.cpp src\Motor.cpp src\Mobil.cpp src\Truk.cpp src\Exception.cpp src\SlotParkir.cpp src\Tiket.cpp src\Struk.cpp src\TanpaDiskon.cpp src\DiskonMember.cpp src\HitungDurasi.cpp src\GedungParkir.cpp main.cpp -o parkir_pintar.exe
 
 REM Cek hasil compile
 if %ERRORLEVEL% EQU 0 (
@@ -38,7 +37,7 @@ if %ERRORLEVEL% EQU 0 (
     echo Menjalankan program test...
     echo.
     echo ================================================
-    test_bagian1.exe
+    parkir_pintar.exe
     echo ================================================
     echo.
     echo Program selesai dijalankan.
